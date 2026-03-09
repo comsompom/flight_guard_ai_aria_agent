@@ -145,7 +145,7 @@ The backend supports two modes:
    Set `AIRIA_API_URL` and `AIRIA_API_KEY` (from Agent Settings > Interfaces > API).
 
 **Weather and elevation (no registration):**  
-The backend and MCP server use **Open-Meteo** (weather) and **Open-Elevation** (terrain) by default—no API key or signup required. Temperature, pressure, wind, and earth heights are fetched automatically for mission waypoints. Optionally set `OPENWEATHER_API_KEY` to use OpenWeather instead; `OPEN_TOPO_BASE_URL` is only used as a fallback if Open-Elevation is unavailable.
+The backend and MCP server use **Open-Meteo** (weather) and **Open-Elevation** (terrain) by default—no API key or signup required. Temperature, pressure, wind, and earth heights are fetched automatically for mission waypoints. Telemetry is collected **asynchronously in parallel** (one weather request + one batch elevation request) to minimize latency. Optionally set `OPENWEATHER_API_KEY` to use OpenWeather instead; `OPEN_TOPO_BASE_URL` is only used as a fallback if Open-Elevation is unavailable.
 
 ---
 
