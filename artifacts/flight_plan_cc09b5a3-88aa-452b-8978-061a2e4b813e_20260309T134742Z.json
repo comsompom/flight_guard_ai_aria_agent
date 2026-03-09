@@ -1,0 +1,28 @@
+{
+  "document_type": "FlightGuard Pre-Flight Briefing",
+  "mission_id": "cc09b5a3-88aa-452b-8978-061a2e4b813e",
+  "status": "APPROVED",
+  "authorizing_officer": "OP-774",
+  "clearance_level": "SECRET",
+  "approved_by_human": true,
+  "commander_note": "Approved for execution.",
+  "waypoints": [
+    {
+      "lat": 52.48278,
+      "lon": 13.07373,
+      "alt_m": 80.0,
+      "speed_m_s": 12.0
+    }
+  ],
+  "launch_parameters": {
+    "takeoff_mode": "Catapult or wheels (fixed-wing)",
+    "optimal_heading_degrees": 138,
+    "wheel_landing_capable": true
+  },
+  "risk_level": "MEDIUM",
+  "warnings": [
+    "Moderate-high wind; confirm airframe stability."
+  ],
+  "generated_at_utc": "2026-03-09T13:47:42.917539+00:00",
+  "clearance_code": "6BCCEE98"
+}
