@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlightGuard Agent - Mission Console</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="panel">
+        <h1>FlightGuard Agent</h1>
+        <p class="muted">Military/defense mission planning with HITL approval.</p>
+
+        <label>Operator ID <input id="operatorId" value="OP-774" /></label>
+        <label>Clearance <input id="clearance" value="SECRET" /></label>
+        <label>
+          Drone Type
+          <select id="droneType">
+            <option value="plane">Plane / Fixed-wing</option>
+            <option value="uav">UAV (fixed-wing)</option>
+            <option value="quadcopter">Quadcopter</option>
+          </select>
+        </label>
+        <label>Weight (kg) <input id="weightKg" type="number" value="2.0" step="0.1" /></label>
+        <label>Wingspan (m) <input id="wingspanM" type="number" value="1.5" step="0.1" /></label>
+
+        <div class="button-row">
+          <button id="clearWp">Clear Waypoints</button>
+          <button id="planMission">Generate Flight Plan</button>
+        </div>
+        <p class="muted">Click map to add waypoints. Each waypoint defaults to 80m AGL, 12 m/s.</p>
+
+        <h2>Waypoints</h2>
+        <pre id="waypointsView">[]</pre>
+
+        <h2>Mission Review</h2>
+        <pre id="reviewView">No mission yet.</pre>
+
+        <div id="approvalButtons" class="button-row hidden">
+          <button id="abortMission" class="warn">Abort</button>
+          <button id="approveMission" class="ok">Authorize Mission</button>
+        </div>
+      </aside>
+      <main id="map"></main>
+    </div>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
