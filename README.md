@@ -1,5 +1,7 @@
 # FlightGuard Agent (Airia Hackathon)
 
+![FlightGuard Agent](./fg_logo.jpg)
+
 FlightGuard Agent is a military/defense-focused AI mission planner for drone operators (plane, fixed-wing UAV, quadcopter).  
 It implements the exact hackathon flow from `solution.md`:
 
