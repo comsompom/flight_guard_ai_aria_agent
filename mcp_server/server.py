@@ -7,6 +7,7 @@ import requests
 
 from backend.app.config import settings
 from backend.app.services.safety import calculate_takeoff
+from backend.app.services.open_weather_elevation import get_weather, get_elevation
 
 mcp = FastMCP("FlightGuard_MCP")
 
@@ -15,61 +16,60 @@ mcp = FastMCP("FlightGuard_MCP")
 def get_mission_weather(latitude: float, longitude: float) -> dict[str, Any]:
     """
     Gets wind speed/direction, temperature, and pressure for mission area.
-    Uses OpenWeather when OPENWEATHER_API_KEY exists, else deterministic mock.
+    Uses Open-Meteo (no API key) by default; OpenWeather if OPENWEATHER_API_KEY is set.
     """
-    if not settings.openweather_api_key:
-        base = abs(latitude) + abs(longitude)
-        return {
-            "temperature_celsius": round((base % 35) - 5, 1),
-            "pressure_hpa": round(1000 + (base % 20), 1),
-            "wind_speed_m_s": round(4 + (base % 10), 1),
-            "wind_direction_degrees": int((base * 13) % 360),
-            "source": "mcp_mock",
+    if settings.openweather_api_key:
+        url = "https://api.openweathermap.org/data/2.5/weather"
+        params = {
+            "lat": latitude,
+            "lon": longitude,
+            "appid": settings.openweather_api_key,
+            "units": "metric",
         }
-
-    url = "https://api.openweathermap.org/data/2.5/weather"
-    params = {
-        "lat": latitude,
-        "lon": longitude,
-        "appid": settings.openweather_api_key,
-        "units": "metric",
-    }
-    r = requests.get(url, params=params, timeout=12)
-    r.raise_for_status()
-    payload = r.json()
-    return {
-        "temperature_celsius": payload["main"]["temp"],
-        "pressure_hpa": payload["main"]["pressure"],
-        "wind_speed_m_s": payload.get("wind", {}).get("speed", 0.0),
-        "wind_direction_degrees": int(payload.get("wind", {}).get("deg", 0)),
-        "source": "openweather",
-    }
+        try:
+            r = requests.get(url, params=params, timeout=12)
+            r.raise_for_status()
+            payload = r.json()
+            return {
+                "temperature_celsius": payload["main"]["temp"],
+                "pressure_hpa": payload["main"]["pressure"],
+                "wind_speed_m_s": payload.get("wind", {}).get("speed", 0.0),
+                "wind_direction_degrees": int(payload.get("wind", {}).get("deg", 0)),
+                "source": "openweather",
+            }
+        except Exception:
+            pass
+    return get_weather(latitude, longitude)
 
 
 @mcp.tool()
 def get_terrain_elevation(latitude: float, longitude: float) -> dict[str, Any]:
     """
-    Gets terrain elevation from OpenTopoData.
+    Gets terrain elevation. Uses Open-Elevation (no API key) by default.
+    Falls back to OpenTopoData if OPEN_TOPO_BASE_URL is set and Open-Elevation fails.
     """
-    url = f"{settings.open_topo_base_url}/srtm90m"
-    params = {"locations": f"{latitude},{longitude}"}
-    try:
-        r = requests.get(url, params=params, timeout=12)
-        r.raise_for_status()
-        data = r.json()
-        result = data["results"][0]
-        elevation = float(result.get("elevation", 0.0))
-        return {
-            "elevation_meters": elevation,
-            "terrain_type": "flat" if elevation < 120 else "hilly",
-            "source": "opentopodata",
-        }
-    except Exception:
-        return {
-            "elevation_meters": 180.0,
-            "terrain_type": "unknown",
-            "source": "mcp_fallback",
-        }
+    result = get_elevation(latitude, longitude)
+    if result.get("source") == "open_weather_elevation_fallback" and getattr(settings, "open_topo_base_url", None):
+        url = f"{settings.open_topo_base_url}/srtm90m"
+        params = {"locations": f"{latitude},{longitude}"}
+        try:
+            r = requests.get(url, params=params, timeout=12)
+            r.raise_for_status()
+            data = r.json()
+            res = data["results"][0]
+            elevation = float(res.get("elevation", 0.0))
+            return {
+                "elevation_meters": elevation,
+                "terrain_type": "flat" if elevation < 120 else "hilly",
+                "source": "opentopodata",
+            }
+        except Exception:
+            pass
+    return {
+        "elevation_meters": result["elevation_meters"],
+        "terrain_type": result.get("terrain_type", "unknown"),
+        "source": result.get("source", "open_elevation"),
+    }
 
 
 @mcp.tool()

@@ -10,6 +10,7 @@ from typing import Any
 import requests
 
 from app.config import settings
+from app.services.open_weather_elevation import get_weather_and_elevation_for_waypoints
 
 
 @dataclass
@@ -46,28 +47,25 @@ class AiriaClient:
 
     def _normalize_airia_response(self, data: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
         """Map Airia v2 pipeline execution response to our expected weather/terrain/compliance shape.
-        If the response is plain text or unknown shape, fill from local simulation so the pipeline still runs.
+        If the response is plain text or unknown shape, fill with real open weather/elevation data.
         """
         waypoints = context.get("waypoints", [])
-        first_wp = waypoints[0] if waypoints else {"lat": 0.0, "lon": 0.0}
-        seed_input = (
-            f'{first_wp.get("lat", 0):.4f}:{first_wp.get("lon", 0):.4f}:{context.get("operator_id", "")}'
-        )
-        seed = int(hashlib.sha256(seed_input.encode("utf-8")).hexdigest()[:8], 16)
-        rng = random.Random(seed)
-        default_weather = {
-            "temperature_celsius": round(rng.uniform(-5.0, 35.0), 1),
-            "pressure_hpa": round(rng.uniform(995, 1024), 1),
-            "wind_speed_m_s": round(rng.uniform(1.5, 20), 1),
-            "wind_direction_degrees": int(rng.uniform(0, 359)),
-            "source": "airia_fallback",
-        }
-        default_terrain = [
-            {"lat": wp.get("lat", 0), "lon": wp.get("lon", 0), "elevation_meters": round(rng.uniform(30, 1200), 1)}
-            for wp in waypoints
-        ]
+        default_weather, default_terrain = get_weather_and_elevation_for_waypoints(waypoints)
+        if not default_terrain and waypoints:
+            first_wp = waypoints[0]
+            seed_input = (
+                f'{first_wp.get("lat", 0):.4f}:{first_wp.get("lon", 0):.4f}:{context.get("operator_id", "")}'
+            )
+            seed = int(hashlib.sha256(seed_input.encode("utf-8")).hexdigest()[:8], 16)
+            rng = random.Random(seed)
+            default_terrain = [
+                {"lat": wp.get("lat", 0), "lon": wp.get("lon", 0), "elevation_meters": round(rng.uniform(30, 1200), 1)}
+                for wp in waypoints
+            ]
+        _seed = int(hashlib.sha256(str(waypoints[:1]).encode("utf-8")).hexdigest()[:8], 16)
+        _rng = random.Random(_seed)
         default_compliance = {
-            "zone_status": "CLEARED" if rng.random() > 0.15 else "RESTRICTED",
+            "zone_status": "CLEARED" if _rng.random() > 0.15 else "RESTRICTED",
             "max_altitude_agl_meters": 120,
             "allowed_drone_types": ["quadcopter", "uav_fixed_wing", "plane", "uav"],
             "required_certificates": ["Mission Ops Certificate", "BVLOS Endorsement"],
@@ -98,28 +96,19 @@ class AiriaClient:
 
     def _execute_local_simulation(self, context: dict[str, Any]) -> dict[str, Any]:
         waypoints = context.get("waypoints", [])
-        first_wp = waypoints[0] if waypoints else {"lat": 0.0, "lon": 0.0}
-        seed_input = (
-            f'{first_wp["lat"]:.4f}:{first_wp["lon"]:.4f}:{context.get("operator_id", "")}'
-        )
-        seed = int(hashlib.sha256(seed_input.encode("utf-8")).hexdigest()[:8], 16)
-        rng = random.Random(seed)
-
-        weather = {
-            "temperature_celsius": round(rng.uniform(-5.0, 35.0), 1),
-            "pressure_hpa": round(rng.uniform(995, 1024), 1),
-            "wind_speed_m_s": round(rng.uniform(1.5, 20), 1),
-            "wind_direction_degrees": int(rng.uniform(0, 359)),
-            "source": "local_simulation",
-        }
-        terrain = [
-            {
-                "lat": wp["lat"],
-                "lon": wp["lon"],
-                "elevation_meters": round(rng.uniform(30, 1200), 1),
-            }
-            for wp in waypoints
-        ]
+        weather, terrain = get_weather_and_elevation_for_waypoints(waypoints)
+        if not terrain and waypoints:
+            seed_input = (
+                f'{waypoints[0].get("lat", 0):.4f}:{waypoints[0].get("lon", 0):.4f}:{context.get("operator_id", "")}'
+            )
+            seed = int(hashlib.sha256(seed_input.encode("utf-8")).hexdigest()[:8], 16)
+            rng = random.Random(seed)
+            terrain = [
+                {"lat": wp.get("lat", 0), "lon": wp.get("lon", 0), "elevation_meters": round(rng.uniform(30, 1200), 1)}
+                for wp in waypoints
+            ]
+        seed_final = int(hashlib.sha256(str(waypoints[:1]).encode("utf-8")).hexdigest()[:8], 16)
+        rng = random.Random(seed_final)
         zone_status = "CLEARED" if rng.random() > 0.15 else "RESTRICTED"
         compliance = {
             "zone_status": zone_status,

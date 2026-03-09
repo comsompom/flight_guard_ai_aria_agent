@@ -142,15 +142,10 @@ The backend supports two modes:
 1. **Demo mode (default)**  
    Deterministic local simulation for stable hackathon demo behavior.
 2. **Live Airia mode**  
-   Set:
-   - `AIRIA_API_URL`
-   - `AIRIA_API_KEY`
-   - `AIRIA_ROUTER_AGENT_ID` (optional)
+   Set `AIRIA_API_URL` and `AIRIA_API_KEY` (from Agent Settings > Interfaces > API).
 
-MCP server can also run with:
-
-- `OPENWEATHER_API_KEY` (weather)
-- `OPEN_TOPO_BASE_URL` (elevation)
+**Weather and elevation (no registration):**  
+The backend and MCP server use **Open-Meteo** (weather) and **Open-Elevation** (terrain) by default—no API key or signup required. Temperature, pressure, wind, and earth heights are fetched automatically for mission waypoints. Optionally set `OPENWEATHER_API_KEY` to use OpenWeather instead; `OPEN_TOPO_BASE_URL` is only used as a fallback if Open-Elevation is unavailable.
 
 ---
 
