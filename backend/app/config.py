@@ -10,7 +10,6 @@ class Settings(BaseSettings):
 
     airia_api_url: str = Field(default="")
     airia_api_key: str = Field(default="")
-    airia_router_agent_id: str = Field(default="")
     airia_timeout_seconds: int = 20
 
     # Optional external APIs for production-ready MCP tools.
