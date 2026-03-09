@@ -152,7 +152,24 @@ MCP server can also run with:
 
 ---
 
-## 7) Security and Production Hardening (Post-Hackathon)
+## 7) Airia Deployment + Demo Runbook
+
+For the exact Airia setup and test flow used in this project:
+
+- `docs/airia_deployment_process.md`
+- `docs/demo_script_and_instructions.md`
+- `docs/airia_full_creation_process.md`
+
+These two files include:
+- MCP deployment choices and settings
+- Stable model settings
+- Step-by-step Playground prompts
+- HITL approval walkthrough
+- Troubleshooting for structured output/tool failures
+
+---
+
+## 8) Security and Production Hardening (Post-Hackathon)
 
 - Replace in-memory mission store with Redis/PostgreSQL.
 - Add authentication and role-based access control.
@@ -162,7 +179,7 @@ MCP server can also run with:
 
 ---
 
-## 8) Repository Layout
+## 9) Repository Layout
 
 ```text
 backend/
@@ -184,12 +201,14 @@ frontend/
 docs/
   architecture.md
   deployment.md
+  airia_deployment_process.md
+  demo_script_and_instructions.md
 solution.md
 ```
 
 ---
 
-## 9) Why This Matches the Solution
+## 10) Why This Matches the Solution
 
 From your solution requirements, this implementation includes:
 
