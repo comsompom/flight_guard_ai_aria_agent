@@ -72,10 +72,10 @@ The system does **not** authorize execution at planning time.
 
 ## 4) Quick Start (Local)
 
-## Prerequisites
+### Prerequisites
 
 - Python 3.11+
-- Optional Docker Desktop
+- Optional: Docker Desktop for `docker compose` run
 
 ### A) Python Run
 
@@ -156,8 +156,9 @@ For the exact Airia setup and test flow used in this project:
 - `docs/airia_deployment_process.md`
 - `docs/demo_script_and_instructions.md`
 - `docs/airia_full_creation_process.md`
+- `docs/video_presentation_guide.md` — step-by-step silent demo video for the hackathon
 
-These two files include:
+These docs include:
 - MCP deployment choices and settings
 - Stable model settings
 - Step-by-step Playground prompts
@@ -179,6 +180,12 @@ These two files include:
 ## 9) Repository Layout
 
 ```text
+requirements.txt
+.env.example
+docker-compose.yml
+Dockerfile.backend
+Dockerfile.mcp
+Dockerfile.frontend
 backend/
   app/
     main.py
@@ -188,6 +195,7 @@ backend/
       airia_client.py
       mission_service.py
       document_service.py
+      open_weather_elevation.py
       safety.py
 mcp_server/
   server.py
@@ -199,7 +207,9 @@ docs/
   architecture.md
   deployment.md
   airia_deployment_process.md
+  airia_full_creation_process.md
   demo_script_and_instructions.md
+  video_presentation_guide.md
 solution.md
 ```
 

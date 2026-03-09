@@ -22,7 +22,7 @@ Run frontend:
 python -m http.server 8080 --directory frontend
 ```
 
-Optional MCP server:
+Optional MCP server (from repo root; requires `backend` and `mcp_server` on PYTHONPATH):
 
 ```powershell
 $env:PYTHONPATH="."
@@ -42,9 +42,8 @@ Services:
 
 ## 3) Environment Variables
 
-- `AIRIA_API_URL`, `AIRIA_API_KEY`: enables live Router execution.
-- `OPENWEATHER_API_KEY`: enables live weather in MCP weather tool.
-- `OPEN_TOPO_BASE_URL`: elevation source (default OpenTopoData).
+- `AIRIA_API_URL`, `AIRIA_API_KEY`: enable live Airia Pipeline Execution (v2). Get URL and key from Agent Settings > Interfaces > API.
+- Weather and elevation use **Open-Meteo** and **Open-Elevation** by default (no key). Optionally `OPENWEATHER_API_KEY` uses OpenWeather in MCP; `OPEN_TOPO_BASE_URL` is fallback if Open-Elevation is unavailable.
 
 ## 4) Production Notes
 
@@ -53,3 +52,10 @@ Services:
 - Restrict CORS to trusted origins.
 - Enable TLS and API gateway policies.
 - Add audit logging for all approval actions (HITL compliance).
+
+## 5) See Also
+
+- `docs/architecture.md` — component overview and data flow
+- `docs/airia_deployment_process.md` — Airia agent and MCP setup
+- `docs/demo_script_and_instructions.md` — Playground prompts and test flow
+- `docs/video_presentation_guide.md` — silent demo video for hackathon

@@ -17,11 +17,15 @@
 
 3. **MCP Tool Server** (`mcp_server/server.py`)
    - Exposes tools for weather, terrain, compliance, and takeoff vectors.
-   - Can use mock mode or external APIs.
+   - Uses Open-Meteo and Open-Elevation by default (no API key); optional OpenWeather.
 
-4. **Airia Router Integration**
-   - If `AIRIA_API_URL` and `AIRIA_API_KEY` are set, backend calls Router endpoint.
-   - Otherwise local deterministic simulation is used for demos.
+4. **Weather & elevation** (`backend/app/services/open_weather_elevation.py`)
+   - Fetches real temperature, pressure, wind, and terrain elevation.
+   - Async parallel fetching (one weather + one batch elevation request) for speed.
+
+5. **Airia Pipeline Integration**
+   - If `AIRIA_API_URL` and `AIRIA_API_KEY` are set, backend calls Airia Pipeline Execution API (v2) with `X-API-KEY` header.
+   - Otherwise local flow with real Open-Meteo/Open-Elevation data is used for demos.
 
 ## HITL Control Point
 

@@ -186,6 +186,7 @@ This state is stable for demo/video/judge interaction.
 
 ## 11) Related Documents
 
-- `docs/airia_deployment_process.md` - deployment checklist and settings
-- `docs/demo_script_and_instructions.md` - exact prompts and demo flow
-- `README.md` - project overview and execution entry points
+- `docs/airia_deployment_process.md` — deployment checklist and settings
+- `docs/demo_script_and_instructions.md` — exact prompts and demo flow
+- `docs/video_presentation_guide.md` — silent hackathon demo video steps
+- `README.md` — project overview and execution entry points
