@@ -17,8 +17,9 @@ if backend_dir not in sys.path:
 if __name__ == "__main__":
     os.chdir(REPO_ROOT)  # ensure frontend/ is found relative to repo root
     print("Starting FlightGuard (API + map UI)...")
-    print(f"  Open: http://localhost:{BACKEND_PORT}  — map UI and landing")
-    print(f"  API docs: http://localhost:{BACKEND_PORT}/docs")
+    print(f"  Map UI:  http://localhost:{BACKEND_PORT}/   or  http://localhost:{BACKEND_PORT}/map")
+    print(f"  Check:   http://localhost:{BACKEND_PORT}/ping   (should show pong)")
+    print(f"  API:     http://localhost:{BACKEND_PORT}/docs")
     print("Press Ctrl+C to stop.\n")
 
     import uvicorn

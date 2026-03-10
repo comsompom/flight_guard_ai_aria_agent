@@ -67,9 +67,22 @@ def _safe_frontend_file(filename: str) -> FileResponse:
     return FileResponse(str(path))
 
 
+@app.get("/ping")
+def ping():
+    """Verify you're hitting this server: returns pong."""
+    return {"message": "pong", "service": "FlightGuard"}
+
+
 @app.get("/", response_class=HTMLResponse)
 def serve_index():
-    """Serve map UI at root - always return HTML so browser shows the page."""
+    """Serve map UI at root."""
+    return HTMLResponse(content=_read_index_html())
+
+
+@app.get("/map", response_class=HTMLResponse)
+@app.get("/app", response_class=HTMLResponse)
+def serve_map_alt():
+    """Same map UI at /map and /app in case root (/) is not matched."""
     return HTMLResponse(content=_read_index_html())
 
 
@@ -128,3 +141,9 @@ def mission_status(mission_id: str) -> dict:
     return {"mission_id": mission_id, "status": MissionStatus(record.status)}
 
 
+# Fallback: serve frontend for any other GET (so / always works even if root route is skipped)
+@app.get("/{path:path}", response_class=HTMLResponse)
+def serve_frontend_fallback(path: str):
+    if path.startswith("api/") or path in ("docs", "redoc", "openapi.json", "health", "ping"):
+        raise HTTPException(status_code=404, detail="Not Found")
+    return HTMLResponse(content=_read_index_html())
