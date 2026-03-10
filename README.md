@@ -10,6 +10,15 @@ It implements the exact hackathon flow from `solution.md`:
 - Human-in-the-Loop (HITL) mission authorization
 - Dynamic mission document generation (`flight_plan.json`)
 
+### Video presentation
+
+**[Watch the agent working (YouTube)](https://www.youtube.com/watch?v=59oJICVYeNY)** — demo of the FlightGuard mission-planning flow (Airia Playground, HITL approval, map UI).
+
+### Try the agent & API
+
+- **Airia agent (Playground):** [FlightGuard Orchestrator on Airia](https://airia.ai/019cd21f-a4d4-7794-9a5c-5578377eb36c/agents/ff593f33-09fb-4448-bfc4-2e6d19ee935f/3.00)
+- **Pipeline Execution API (v2):** `https://api.airia.ai/v2/PipelineExecution/ff593f33-09fb-4448-bfc4-2e6d19ee935f` — use with `X-API-KEY` and `userInput` in the request body (see [Deployment](docs/deployment.md)).
+
 ---
 
 ## 1) What This Solves
