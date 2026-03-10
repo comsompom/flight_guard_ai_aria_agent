@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:8000";
+// Same origin when frontend is served from backend (e.g. http://localhost:8000)
+const API_BASE = "";
 
 const waypoints = [];
 let missionId = null;

@@ -1,5 +1,9 @@
+import os
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse
 
 from app.config import settings
 from app.models import ApproveMissionRequest, MissionRecord, MissionStatus, MissionRequest
@@ -15,6 +19,73 @@ app.add_middleware(
 )
 
 missions = MissionService()
+
+# Frontend dir: try from this file's location, then from cwd (e.g. repo root)
+def _frontend_dir() -> Path:
+    candidates = [
+        Path(__file__).resolve().parent.parent.parent / "frontend",
+        Path(os.getcwd()) / "frontend",
+        Path(os.getcwd()).parent / "frontend",
+    ]
+    for d in candidates:
+        if d.is_dir() and (d / "index.html").exists():
+            return d
+    return candidates[0]  # fallback so mount still runs if dir created later
+
+_FRONTEND_DIR = _frontend_dir()
+
+# Pre-read index.html so root always serves HTML (avoids path/FileResponse issues)
+_INDEX_HTML: str | None = None
+
+
+def _read_index_html() -> str:
+    global _INDEX_HTML
+    if _INDEX_HTML is None:
+        index_path = _FRONTEND_DIR / "index.html"
+        if not index_path.is_file():
+            raise RuntimeError(f"Frontend index not found: {index_path}")
+        _INDEX_HTML = index_path.read_text(encoding="utf-8")
+    return _INDEX_HTML
+
+
+@app.on_event("startup")
+def _log_frontend_path():
+    index = _FRONTEND_DIR / "index.html"
+    import sys
+    print(f"[FlightGuard] Frontend dir: {_FRONTEND_DIR}", file=sys.stderr)
+    print(f"[FlightGuard] index.html exists: {index.exists()}", file=sys.stderr)
+    if index.exists():
+        _read_index_html()
+        print("[FlightGuard] Root (/) will serve map UI", file=sys.stderr)
+
+
+def _safe_frontend_file(filename: str) -> FileResponse:
+    """Serve a file from frontend dir; 404 if missing."""
+    path = _FRONTEND_DIR / filename
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Not Found")
+    return FileResponse(str(path))
+
+
+@app.get("/", response_class=HTMLResponse)
+def serve_index():
+    """Serve map UI at root - always return HTML so browser shows the page."""
+    return HTMLResponse(content=_read_index_html())
+
+
+@app.get("/index.html", response_class=FileResponse)
+def serve_index_html():
+    return _safe_frontend_file("index.html")
+
+
+@app.get("/styles.css", response_class=FileResponse)
+def serve_css():
+    return _safe_frontend_file("styles.css")
+
+
+@app.get("/app.js", response_class=FileResponse)
+def serve_js():
+    return _safe_frontend_file("app.js")
 
 
 @app.get("/health")
@@ -55,3 +126,5 @@ def mission_status(mission_id: str) -> dict:
     if record is None:
         raise HTTPException(status_code=404, detail="Mission not found")
     return {"mission_id": mission_id, "status": MissionStatus(record.status)}
+
+

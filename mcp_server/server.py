@@ -1,5 +1,13 @@
 from __future__ import annotations
 
+import os
+import sys
+
+# Allow running as "python mcp_server/server.py" from repo root (backend must be importable)
+_repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
+
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP

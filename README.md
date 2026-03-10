@@ -157,6 +157,8 @@ For the exact Airia setup and test flow used in this project:
 - `docs/demo_script_and_instructions.md`
 - `docs/airia_full_creation_process.md`
 - `docs/video_presentation_guide.md` — step-by-step silent demo video for the hackathon
+- `docs/video_cards.md` — numbered cards: what to run, what to show, text on screen, duration
+- `docs/video_slides.md` — one-card-per-screen slides to scroll and show in the video
 
 These docs include:
 - MCP deployment choices and settings
@@ -210,6 +212,7 @@ docs/
   airia_full_creation_process.md
   demo_script_and_instructions.md
   video_presentation_guide.md
+  video_cards.md
 solution.md
 ```
 
