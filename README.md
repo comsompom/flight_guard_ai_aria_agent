@@ -14,6 +14,12 @@ It implements the exact hackathon flow from `solution.md`:
 
 **[Watch the agent working (YouTube)](https://www.youtube.com/watch?v=59oJICVYeNY)** — demo of the FlightGuard mission-planning flow (Airia Playground, HITL approval, map UI).
 
+### Project Got the 2nd Place on the DevPost Hackathon Airia AI Agents Hackathon
+
+![Hackathon Winner](https://devpost.com/submit-to/27807-airia-ai-agents-hackathon/manage/submissions?_gl=1*ulm4qc*_gcl_au*Mjc0NTU0ODcwLjE3NzU4MDMzOTY.*_ga*MjAxNjgzMTgxMy4xNzcxNDI1NzMx)
+
+![Winner screen](./fg_winner.png)
+
 ### Try the agent & API
 
 - **Airia agent (Playground):** [FlightGuard Orchestrator on Airia](https://airia.ai/019cd21f-a4d4-7794-9a5c-5578377eb36c/agents/ff593f33-09fb-4448-bfc4-2e6d19ee935f/3.00)
