@@ -16,7 +16,7 @@ It implements the exact hackathon flow from `solution.md`:
 
 ### Project Got the 2nd Place on the DevPost Hackathon Airia AI Agents Hackathon
 
-![Hackathon Winner](https://devpost.com/submit-to/27807-airia-ai-agents-hackathon/manage/submissions?_gl=1*ulm4qc*_gcl_au*Mjc0NTU0ODcwLjE3NzU4MDMzOTY.*_ga*MjAxNjgzMTgxMy4xNzcxNDI1NzMx)
+[Hackathon Winner](https://devpost.com/submit-to/27807-airia-ai-agents-hackathon/manage/submissions?_gl=1*ulm4qc*_gcl_au*Mjc0NTU0ODcwLjE3NzU4MDMzOTY.*_ga*MjAxNjgzMTgxMy4xNzcxNDI1NzMx)
 
 ![Winner screen](./fg_winner.png)
 
